@@ -1,0 +1,735 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- saved from url=(0056)http://www.pythonware.com/library/pil/handbook/image.htm -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>The Image Module</title>
+<link rel="stylesheet" href="./The Image Module_files/pythonware.css" type="text/css">
+
+</head>
+<body bgcolor="white" text="black"><a name="top"></a>
+<table class="masthead" border="0" cellspacing="0" cellpadding="0" width="100%"><tbody><tr><td align="left">
+<a href="http://www.pythonware.com/index.htm">pythonware.com</a> <!-- [debug: 0.03s 2013-03-23 16:31:14.621169] -->
+</td><td align="right">
+<a href="http://www.pythonware.com/products/index.htm">products</a> <span class="mark">:::</span>
+<a href="http://www.pythonware.com/library/index.htm">library</a> <span class="mark">:::</span>
+<a href="http://www.pythonware.com/search.htm">search</a> <span class="mark">:::</span>
+<a href="http://www.pythonware.com/daily/index.htm"><b>daily Python-URL!</b></a>
+</td></tr></tbody></table>
+
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+<tbody><tr><td width="120" valign="top">
+<div class="browser">
+<p><a href="http://www.pythonware.com/">Library</a></p><p><a href="http://www.pythonware.com/library/pil/">Python Imaging Library Handbook</a></p><p><b>The Image Module :::</b></p>
+<div style="padding-top: 20px"><a href="http://www.djangoproject.com/"><img src="./The Image Module_files/djangosite80x15_grey.gif" border="0" alt="A Django site." title="A Django site."></a></div>
+</div>
+</td>
+<td width="10">&nbsp;</td>
+<td width="2" class="grid"></td>
+<td width="10">&nbsp;</td>
+<td valign="top">
+
+<h1 class="title">The Image Module</h1>
+<div class="pad">
+<p><a href="http://www.pythonware.com/library/pil/handbook/concepts.htm">Prev</a>&nbsp;&nbsp;&nbsp;<a href="http://www.pythonware.com/library/pil/handbook/imagechops.htm">Next</a></p><p>
+</p>
+<p>The <b>Image</b> module provides a class with the same name which
+is used to represent a PIL image. The module also provides a number of
+factory functions, including functions to load images from files, and
+to create new images.</p>
+<h2 id="examples">Examples</h2>
+<p>The following script loads an image, rotates it 45 degrees, and
+displays it using an external viewer (usually <b>xv</b> on Unix, and
+the <b>paint</b> program on Windows).</p>
+<div class="example">
+<b>Open, rotate, and display an image (using the default viewer)</b>
+<pre class="python">from PIL import Image
+im = Image.open("bride.jpg")
+im.rotate(45).show()
+</pre>
+</div>
+<p>The following script creates nice 128x128 thumbnails of all JPEG
+images in the current directory.</p>
+<div class="example">
+<b>Create thumbnails</b>
+<pre class="python">from PIL import Image
+import glob, os
+
+size = 128, 128
+
+for infile in glob.glob("*.jpg"):
+    file, ext = os.path.splitext(infile)
+    im = Image.open(infile)
+    im.thumbnail(size, Image.ANTIALIAS)
+    im.save(file + ".thumbnail", "JPEG")
+</pre>
+</div>
+<h2 id="functions">Functions</h2>
+<h3 id="new">new</h3>
+<div class="function" id="image-new-function">
+<p><b>Image.new(mode, size)</b>
+<span>=&gt; image</span></p>
+<p><b>Image.new(mode, size, color)</b>
+<span>=&gt; image</span></p>
+<p>Creates a new image with the given mode and size. Size is given as
+a 2-tuple. The colour is given as a single value for single-band
+images, and a tuple for multi-band images (with one value for each
+band).  If the colour argument is omitted, the image is filled with
+black.  If the colour is None, the image is not initialised.</p>
+</div>
+<h3 id="open">open</h3>
+<div class="function" id="image-open-function">
+<p><b>Image.open(infile)</b>
+<span>=&gt; image</span></p>
+<p><b>Image.open(infile, mode)</b>
+<span>=&gt; image</span></p>
+<p>Opens and identifies the given image file.  This is a lazy
+operation; the actual image data is not read from the file until you
+try to process the data (call the <b>load</b> method to force
+loading).  If the mode argument is given, it must be "r".</p>
+<p>You can use either a string (representing the filename) or a file
+object. In the latter case, the file object must implement
+<b>read</b>, <b>seek</b>, and <b>tell</b> methods, and be opened in
+binary mode.</p>
+</div>
+<h3 id="blend">blend</h3>
+<div class="function" id="image-blend-function">
+<p><b>Image.blend(image1, image2, alpha)</b>
+<span>=&gt; image</span></p>
+<p>Creates a new image by interpolating between the given images,
+using a constant alpha.  Both images must have the same size and
+mode.</p>
+<pre>    out = image1 * (1.0 - alpha) + image2 * alpha
+</pre>
+<p>If alpha is 0.0, a copy of the first image is returned. If alpha
+is 1.0, a copy of the second image is returned. There are no
+restrictions on the alpha value. If necessary, the result is
+clipped to fit into the allowed output range.</p>
+</div>
+<h3 id="composite">composite</h3>
+<div class="function" id="image-composite-function">
+<p><b>Image.composite(image1, image2, mask)</b>
+<span>=&gt; image</span></p>
+<p>Creates a new image by interpolating between the given images,
+using the mask as alpha.  The mask image can have mode "1", "L", or
+"RGBA".  All images must be the same size.</p>
+</div>
+<h3 id="eval">eval</h3>
+<div class="function" id="image-eval-function">
+<p><b>Image.eval(image, function)</b>
+<span>=&gt; image</span></p>
+<p>Applies the function (which should take one argument) to each
+pixel in the given image. If the image has more than one band, the
+same function is applied to each band. Note that the function is
+evaluated once for each possible pixel value, so you cannot use
+random components or other generators.</p>
+</div>
+<h3 id="frombuffer">frombuffer</h3>
+<div class="function" id="image-frombuffer-function">
+<p><b>Image.frombuffer(mode, size, data)</b>
+<span>=&gt; image</span></p>
+<p>(New in PIL 1.1.4).  Creates an image memory from pixel data in a
+string or buffer object, using the standard "raw" decoder.  For some
+modes, the image memory will share memory with the original buffer
+(this means that changes to the original buffer object are reflected
+in the image).  Not all modes can share memory; supported modes
+include "L", "RGBX", "RGBA", and "CMYK".  For other modes, this
+function behaves like a corresponding call to the <b>fromstring</b>
+function.</p>
+<p class="note"><b>Note:</b> In versions up to 1.1.6, the default
+orientation differs from that of <b>fromstring</b>.  This may be
+changed in future versions, so for maximum portability, it's
+recommended that you spell out all arguments when using the "raw"
+decoder:</p>
+<pre class="python">im = Image.frombuffer(mode, size, data, "raw", mode, 0, 1)
+</pre>
+<p><b>Image.frombuffer(mode, size, data, decoder, parameters)</b>
+<span>=&gt; image</span></p>
+<p>Same as the corresponding <b>fromstring</b> call.</p>
+</div>
+<h3 id="fromstring">fromstring</h3>
+<div class="function" id="image-fromstring-function">
+<p><b>Image.fromstring(mode, size, data)</b>
+<span>=&gt; image</span></p>
+<p>Creates an image memory from pixel data in a string, using the
+standard "raw" decoder.</p>
+<p><b>Image.fromstring(mode, size, data, decoder, parameters)</b>
+<span>=&gt; image</span></p>
+<p>Same, but allows you to use any pixel decoder supported by PIL.
+For more information on available decoders, see the section <a href="http://www.pythonware.com/library/pil/handbook/decoder.htm"><i>Writing Your Own File Decoder</i></a>.</p>
+<p>Note that this function decodes pixel data, not entire images.  If
+you have an entire image file in a string, wrap it in a <b>StringIO</b>
+object, and use <a href="http://www.pythonware.com/library/pil/handbook/image.htm#image-open-function"><b>open</b></a>
+to load it.</p>
+</div>
+<h3 id="merge">merge</h3>
+<div class="function" id="image-merge-function">
+<p><b>Image.merge(mode, bands)</b>
+<span>=&gt; image</span></p>
+<p>Creates a new image from a number of single band images. The
+bands are given as a tuple or list of images, one for each band
+described by the mode. All bands must have the same size.</p>
+</div>
+<h2 id="methods">Methods</h2>
+<p>An instance of the <b>Image</b> class has the following methods.
+Unless otherwise stated, all methods return a new instance of the
+<b>Image</b> class, holding the resulting image.</p>
+<h3 id="Image.convert">convert</h3>
+<div class="method" id="image-convert-method">
+<p><b>im.convert(mode)</b>
+<span>=&gt; image</span></p>
+<p>Returns a converted copy of an image.</p>
+<p>When translating from a palette image, this translates pixels through
+the palette. If mode is omitted, a mode is chosen so that all information
+in the image and the palette can be represented without a palette.</p>
+<p>When from a colour image to black and white, the library uses the
+ITU-R 601-2 luma transform:</p>
+<pre>    L = R * 299/1000 + G * 587/1000 + B * 114/1000
+</pre>
+<p>When converting to a bilevel image (mode "1"), the source image is
+first converted to black and white.  Resulting values larger than 127
+are then set to white, and the image is dithered.  To use other thresholds,
+use the <b>point</b> method.</p>
+<p><b>im.convert(mode, matrix)</b>
+<span>=&gt; image</span></p>
+<p>Converts an "RGB" image to "L" or "RGB" using a conversion
+matrix. The matrix is a 4- or 16-tuple.</p>
+<p>The following example converts an RGB image (linearly calibrated
+according to ITU-R 709, using the D65 luminant) to the CIE XYZ
+colour space:</p>
+<div class="example">
+<b>Convert RGB to XYZ</b>
+<pre class="python">    rgb2xyz = (
+        0.412453, 0.357580, 0.180423, 0,
+        0.212671, 0.715160, 0.072169, 0,
+        0.019334, 0.119193, 0.950227, 0 )
+    out = im.convert("RGB", rgb2xyz)
+</pre>
+</div>
+<p></p></div>
+<h3 id="Image.copy">copy</h3>
+<div class="method" id="image-copy-method">
+<p><b>im.copy()</b>
+<span>=&gt; image</span></p>
+<p>Copies the image. Use this method if you wish to paste things
+into an image, but still retain the original.</p>
+</div>
+<h3 id="Image.crop">crop</h3>
+<div class="method" id="image-crop-method">
+<p><b>im.crop(box)</b>
+<span>=&gt; image</span></p>
+<p>Returns a rectangular region from the current image. The box is
+a 4-tuple defining the left, upper, right, and lower pixel
+coordinate.</p>
+<p>This is a lazy operation.  Changes to the source image may or may
+not be reflected in the cropped image.  To get a separate copy, call
+the <b>load</b> method on the cropped copy.</p>
+</div>
+<h3 id="Image.draft">draft</h3>
+<div class="method" id="image-draft-method">
+<p><b>im.draft(mode, size)</b></p>
+<p>Configures the image file loader so it returns a version of the
+image that as closely as possible matches the given mode and size.
+For example, you can use this method to convert a colour JPEG to
+greyscale while loading it, or to extract a 128x192 version from a PCD
+file.</p>
+<p>Note that this method modifies the Image object in place.  If the
+image has already been loaded, this method has no effect.</p>
+</div>
+<h3 id="Image.filter">filter</h3>
+<div class="method" id="image-filter-method">
+<p><b>im.filter(filter)</b>
+<span>=&gt; image</span></p>
+<p>Returns a copy of an image filtered by the given filter. For a
+list of available filters, see the
+<a href="http://www.pythonware.com/library/pil/handbook/imagefilter.htm"><b>ImageFilter</b></a>
+module.</p>
+</div>
+<h3 id="Image.fromstring">fromstring</h3>
+<div class="method" id="image-fromstring-method">
+<p><b>im.fromstring(data)</b></p>
+<p><b>im.fromstring(data, decoder, parameters)</b></p>
+<p>Same as the <b>fromstring</b> function, but loads data into
+the current image.</p>
+</div>
+<h3 id="Image.getbands">getbands</h3>
+<div class="method" id="image-getbands-method">
+<p><b>im.getbands()</b>
+<span>=&gt; tuple of strings</span></p>
+<p>Returns a tuple containing the name of each band. For example,
+<b>getbands</b> on an RGB image returns ("R", "G", "B").</p>
+</div>
+<h3 id="Image.getbbox">getbbox</h3>
+<div class="method" id="image-getbbox-method">
+<p><b>im.getbbox()</b>
+<span>=&gt; 4-tuple or None</span></p>
+<p>Calculates the bounding box of the non-zero regions in the
+image. The bounding box is returned as a 4-tuple defining the left,
+upper, right, and lower pixel coordinate. If the image is
+completely empty, this method returns None.</p>
+</div>
+<h3 id="Image.getcolors">getcolors</h3>
+<div class="method" id="image-getcolors-method">
+<p><b>im.getcolors()</b>
+<span>=&gt; a list of (count, color) tuples or None</span></p>
+<p><b>im.getcolors(maxcolors)</b>
+<span>=&gt; a list of (count, color) tuples or None</span></p>
+<p>(New in 1.1.5) Returns an unsorted list of (count, color) tuples,
+where the count is the number of times the corresponding color occurs
+in the image.</p>
+<p>If the maxcolors value is exceeded, the method stops counting
+and returns None.  The default maxcolors value is 256.  To make sure
+you get all colors in an image, you can pass in size[0]*size[1] (but
+make sure you have lots of memory before you do that on huge images).
+
+</p></div>
+<h3 id="Image.getdata">getdata</h3>
+<div class="method" id="image-getdata-method">
+<p><b>im.getdata()</b>
+<span>=&gt; sequence</span></p>
+<p>Returns the contents of an image as a sequence object containing
+pixel values.  The sequence object is flattened, so that values for
+line one follow directly after the values of line zero, and so
+on.</p>
+<p>Note that the sequence object returned by this method is an
+internal PIL data type, which only supports certain sequence
+operations, including iteration and basic sequence access.  To
+convert it to an ordinary sequence (e.g. for printing), use <b>list(im.getdata())</b>.</p>
+</div>
+<h3 id="Image.getextrema">getextrema</h3>
+<div class="method" id="image-getextrema-method">
+<p><b>im.getextrema()</b>
+<span>=&gt; 2-tuple</span></p>
+<p>Returns a 2-tuple containing the minimum and maximum values of
+the image. In the current version of PIL, this is only applicable
+to single-band images.</p>
+</div>
+<h3 id="Image.getpixel">getpixel</h3>
+<div class="method" id="image-getpixel-method">
+<p><b>im.getpixel(xy)</b>
+<span>=&gt; value or tuple</span></p>
+<p>Returns the pixel at the given position. If the image is a
+multi-layer image, this method returns a tuple.</p>
+<p>Note that this method is rather slow; if you need to process larger
+parts of an image from Python, you can either use pixel access objects
+(see <b>load</b>), or the <b>getdata</b> method.</p>
+</div>
+<h3 id="Image.histogram">histogram</h3>
+<div class="method" id="image-histogram-method">
+<p><b>im.histogram()</b>
+<span>=&gt; list</span></p>
+<p>Returns a histogram for the image. The histogram is returned as a
+list of pixel counts, one for each pixel value in the source image. If
+the image has more than one band, the histograms for all bands are
+concatenated (for example, the histogram for an "RGB" image contains
+768 values).</p>
+<p>A bilevel image (mode "1") is treated as a greyscale ("L") image by
+this method.</p>
+<p><b>im.histogram(mask)</b>
+<span>=&gt; list</span></p>
+<p>Returns a histogram for those parts of the image where the mask
+image is non-zero. The mask image must have the same size as the
+image, and be either a bi-level image (mode "1") or a greyscale image
+("L").</p>
+</div>
+<h3 id="Image.load">load</h3>
+<div class="method" id="image-load-method">
+<p><b>im.load()</b></p>
+<p>Allocates storage for the image and loads it from the file (or from
+the source, for lazy operations).  In normal cases, you don't need to
+call this method, since the Image class automatically loads an opened
+image when it is accessed for the first time.</p>
+<p>(New in 1.1.6) In 1.1.6 and later, <b>load</b> returns a pixel access
+object that can be used to read and modify pixels.  The access object
+behaves like a 2-dimensional array, so you can do:</p>
+<pre class="python">pix = im.load()
+print pix[x, y]
+pix[x, y] = value
+</pre></div>
+<p>Access via this object is a lot faster than <b>getpixel</b> and
+<b>putpixel</b>.</p>
+<h3 id="Image.offset">offset</h3>
+<div class="method" id="image-offset-method">
+<p><b>im.offset(xoffset, yoffset)</b>
+<span>=&gt; image</span></p>
+<p>(Deprecated) Returns a copy of the image where the data has been
+offset by the given distances. Data wraps around the edges. If yoffset
+is omitted, it is assumed to be equal to xoffset.</p>
+<p>This method is deprecated. New code should use the <b>offset</b>
+function in the <a href="http://www.pythonware.com/library/pil/handbook/imagechops.htm#offset"><b>ImageChops</b></a>
+module.</p>
+</div>
+<h3 id="Image.paste">paste</h3>
+<div class="method" id="image-paste-method">
+<p><b>im.paste(image, box)</b></p>
+<p>Pastes another image into this image. The box argument is either a
+2-tuple giving the upper left corner, a 4-tuple defining the left,
+upper, right, and lower pixel coordinate, or None (same as (0, 0)).
+If a 4-tuple is given, the size of the pasted image must match the
+size of the region.</p>
+<p>If the modes don't match, the pasted image is converted to the mode
+of this image (see the convert method for details).</p>
+<p><b>im.paste(colour, box)</b></p>
+<p>Same as above, but fills the region with a single colour. The
+colour is given as a single numerical value for single-band images,
+and a tuple for multi-band images.</p>
+<p><b>im.paste(image, box, mask)</b></p>
+<p>Same as above, but updates only the regions indicated by the mask.
+You can use either "1", "L" or "RGBA" images (in the
+latter case, the alpha band is used as mask).  Where the mask is 255,
+the given image is copied as is.  Where the mask is 0, the current
+value is preserved.  Intermediate values can be used for transparency
+effects.</p>
+<p>Note that if you paste an "RGBA" image, the alpha band
+is ignored.  You can work around this by using the same image as both
+source image and mask.</p>
+<p><b>im.paste(colour, box, mask)</b></p>
+<p>Same as above, but fills the region indicated by the mask with a
+single colour.</p>
+</div>
+<h3 id="Image.point">point</h3>
+<div class="method" id="image-point-method">
+<p><b>im.point(table)</b>
+<span>=&gt; image</span></p>
+<p><b>im.point(function)</b>
+<span>=&gt; image</span></p>
+<p>Returns a copy of the image where each pixel has been mapped
+through the given table. The table should contains 256 values per
+band in the image. If a function is used instead, it should take a
+single argument. The function is called once for each possible
+pixel value, and the resulting table is applied to all bands of the
+image.</p>
+<p>If the image has mode "I" (integer) or "F" (floating point), you
+must use a function, and it must have the following format:</p>
+<pre class="python">    argument * scale + offset
+</pre>
+<p>Example:</p>
+<pre class="python">    out = im.point(lambda i: i * 1.2 + 10)
+</pre>
+<p>You can leave out either the <b>scale</b> or the <b>offset</b>.</p>
+<p><b>im.point(table, mode)</b>
+<span>=&gt; image</span></p>
+<p><b>im.point(function, mode)</b>
+<span>=&gt; image</span></p>
+<p>Map the image through table, and convert it on fly. This can be used
+to convert "L" and "P" images to "1" in one step, e.g. to threshold an
+image.</p>
+<p>(New in 1.1.5) This form can also be used to convert "L" images to
+"I" or "F", and to convert "I" images with 16-bit data to "L".  In the
+last case, you must use a 65536-item lookup table.</p>
+</div>
+<h3 id="Image.putalpha">putalpha</h3>
+<div class="method" id="image-putalpha-method">
+<p><b>im.putalpha(band)</b></p>
+<p>Copies the given band to the alpha layer of the current image.</p>
+<p>The image must be an "RGBA" image, and the band must be either "L" or "1".</p>
+<p>(New in PIL 1.1.5)  You can use <b>putalpha</b> on other modes as well;
+the image is converted in place, to a mode that matches the current mode
+but has an alpha layer (this usually means "LA" or "RGBA"). Also, the band argument can be either an image, or a colour value (an integer).</p>
+</div>
+<h3 id="Image.putdata">putdata</h3>
+<div class="method" id="image-putdata-method">
+<p><b>im.putdata(data)</b></p>
+<p><b>im.putdata(data, scale, offset)</b></p>
+<p>Copy pixel values from a sequence object into the image, starting
+at the upper left corner (0, 0).  The scale and offset values are used
+to adjust the sequence values:</p>
+<pre class="python">    pixel = value * scale + offset
+</pre>
+<p>If the scale is omitted, it defaults to 1.0. If the offset is
+omitted, it defaults to 0.0.</p>
+</div>
+<h3 id="Image.putpalette">putpalette</h3>
+<div class="method" id="image-putpalette-method">
+<p><b>im.putpalette(sequence)</b></p>
+<p>Attach a palette to a "P" or "L" image. The palette sequence should
+contain 768 integer values, where each group of three values represent
+the red, green, and blue values for the corresponding pixel index.
+Instead of an integer sequence, you can use an 8-bit string.</p>
+</div>
+<h3 id="Image.putpixel">putpixel</h3>
+<div class="method" id="image-putpixel-method">
+<p><b>im.putpixel(xy, colour)</b></p>
+<p>Modifies the pixel at the given position. The colour is given as
+a single numerical value for single-band images, and a tuple for
+multi-band images.</p>
+<p>Note that this method is relatively slow.  If you're using 1.1.6,
+pixel access objects (see <b>load</b>) provide a faster way to modify
+the image.  If you want to generate an entire image, it can be more
+efficient to create a Python list and use <b>putdata</b> to copy it
+to the image.  For more extensive changes, use <b>paste</b> or the
+<b>ImageDraw</b> module instead.</p>
+<p>You can speed <b>putpixel</b> up a bit by "inlining" the call to the
+internal <b>putpixel</b> implementation method:</p>
+<pre class="python">    im.load()
+    putpixel = im.im.putpixel
+    for i in range(n):
+       ...
+       putpixel((x, y), value)
+</pre>
+<p>In 1.1.6, the above is better written as:</p>
+<pre class="python">    pix = im.load()
+    for i in range(n):
+        ...
+        pix[x, y] = value
+</pre>
+</div>
+<h3 id="Image.resize">resize</h3>
+<div class="method" id="image-resize-method">
+<p><b>im.resize(size)</b>
+<span>=&gt; image</span></p>
+<p><b>im.resize(size, filter)</b>
+<span>=&gt; image</span></p>
+<p>Returns a resized copy of an image. The size argument gives the
+requested size in pixels, as a 2-tuple: (<b>width</b>,
+<b>height</b>).</p>
+<p>The filter argument can be one of <b>NEAREST</b> (use nearest
+neighbour), <b>BILINEAR</b> (linear interpolation in a 2x2
+environment), <b>BICUBIC</b> (cubic spline interpolation in a 4x4
+environment), or <b>ANTIALIAS</b> (a high-quality downsampling
+filter).  If omitted, or if the image has mode "1" or "P", it is set
+to <b>NEAREST</b>.</p>
+</div>
+<h3 id="Image.rotate">rotate</h3>
+<div class="method" id="image-rotate-method">
+<p><b>im.rotate(angle)</b>
+<span>=&gt; image</span></p>
+<p><b>im.rotate(angle, filter=NEAREST, expand=0)</b>
+<span>=&gt; image</span></p>
+<p>Returns a copy of an image rotated the given number of degrees
+counter clockwise around its centre.</p>
+<p>The filter argument can be one of <b>NEAREST</b> (use nearest
+neighbour), <b>BILINEAR</b> (linear interpolation in a 2x2
+environment), or <b>BICUBIC</b> (cubic spline interpolation in a 4x4
+environment).  If omitted, or if the image has mode "1" or "P", it is
+set to <b>NEAREST</b>.</p>
+<p>The expand argument, if true, indicates that the output image should
+be made large enough to hold the rotated image.  If omitted or false,
+the output image has the same size as the input image.
+
+</p></div>
+<h3 id="Image.save">save</h3>
+<div class="method" id="image-save-method">
+<p><b>im.save(outfile, <i>options...</i>)</b></p>
+<p><b>im.save(outfile, format, <i>options...</i>)</b></p>
+<p>Saves the image under the given filename. If format is omitted,
+the format is determined from the filename extension, if possible.
+This method returns None.</p>
+<p>Keyword options can be used to provide additional instructions
+to the writer. If a writer doesn't recognise an option, it is
+silently ignored. The available options are described later in this
+handbook.</p>
+<p>You can use a file object instead of a filename. In this case,
+you must always specify the format. The file object must implement
+the <b>seek</b>, <b>tell</b>, and <b>write</b> methods, and
+be opened in binary mode.</p>
+<p>If the save fails, for some reason, the method will raise an
+exception (usually an IOError exception).  If this happens, the method
+may have created the file, and may have written data to it.  It's up
+to your application to remove incomplete files, if necessary.</p>
+</div>
+<h3 id="Image.seek">seek</h3>
+<div class="method" id="image-seek-method">
+<p><b>im.seek(frame)</b></p>
+<p>Seeks to the given frame in a sequence file. If you seek beyond
+the end of the sequence, the method raises an <b>EOFError</b>
+exception. When a sequence file is opened, the library
+automatically seeks to frame 0.</p>
+<p>Note that in the current version of the library, most sequence
+formats only allows you to seek to the next frame.</p>
+</div>
+<h3 id="Image.show">show</h3>
+<div class="method" id="image-show-method">
+<p><b>im.show()</b></p>
+<p>Displays an image. This method is mainly intended for debugging
+purposes.</p>
+<p>On Unix platforms, this method saves the image to a temporary
+PPM file, and calls the <b>xv</b> utility.</p>
+<p>On Windows, it saves the image to a temporary BMP file, and uses
+the standard BMP display utility to show it.</p>
+<p>This method returns None.</p>
+</div>
+<h3 id="Image.split">split</h3>
+<div class="method" id="image-split-method">
+<p><b>im.split()</b>
+<span>=&gt; sequence</span></p>
+<p>Returns a tuple of individual image bands from an image. For
+example, splitting an "RGB" image creates three new
+images each containing a copy of one of the original bands (red,
+green, blue).</p>
+</div>
+<h3 id="Image.tell">tell</h3>
+<div class="method" id="image-tell-method">
+<p><b>im.tell()</b>
+<span>=&gt; integer</span></p>
+<p>Returns the current frame number.</p>
+</div>
+<h3 id="Image.thumbnail">thumbnail</h3>
+<div class="method" id="image-thumbnail-method">
+<p><b>im.thumbnail(size)</b></p>
+<p><b>im.thumbnail(size, filter)</b></p>
+<p>Modifies the image to contain a thumbnail version of itself, no
+larger than the given size.  This method calculates an appropriate
+thumbnail size to preserve the aspect of the image, calls the
+<b>draft</b> method to configure the file reader (where applicable),
+and finally resizes the image.</p>
+<p>The filter argument can be one of <b>NEAREST</b>, <b>BILINEAR</b>,
+<b>BICUBIC</b>, or <b>ANTIALIAS</b> (best quality).  If omitted, it
+defaults to <b>NEAREST</b>.</p>
+<p>Note that the bilinear and bicubic filters in the current version
+of PIL are not well-suited for thumbnail generation.  You should use
+<b>ANTIALIAS</b> unless speed is much more important than quality.</p>
+<p>Also note that this function modifies the Image object in place.
+If you need to use the full resolution image as well, apply this
+method to a <b>copy</b> of the original image.  This method returns
+None.</p>
+</div>
+<h3 id="Image.tobitmap">tobitmap</h3>
+<div class="method" id="image-tobitmap-method">
+<p><b>im.tobitmap()</b>
+<span>=&gt; string</span></p>
+<p>Returns the image converted to an X11 bitmap.</p>
+</div>
+<h3 id="Image.tostring">tostring</h3>
+<div class="method" id="image-tostring-method">
+<p><b>im.tostring()</b>
+<span>=&gt; string</span></p>
+<p>Returns a string containing pixel data, using the standard
+"raw" encoder.</p>
+<p><b>im.tostring(encoder, parameters)</b>
+<span>=&gt; string</span></p>
+<p>Returns a string containing pixel data, using the given data
+encoding.</p>
+</div>
+<h3 id="Image.transform">transform</h3>
+<div class="method" id="image-transform-method">
+<p><b>im.transform(size, method, data)</b>
+<span>=&gt; image</span></p>
+<p><b>im.transform(size, method, data, filter)</b>
+<span>=&gt; image</span></p>
+<p>Creates a new image with the given size, and the same mode as
+the original, and copies data to the new image using the given
+transform.</p>
+<p>In the current version of PIL, the <i>method</i> argument can be
+<b>EXTENT</b> (cut out a rectangular subregion), <b>AFFINE</b>
+(affine transform), <b>QUAD</b> (map a quadrilateral to a
+rectangle), or <b>MESH</b> (map a number of source quadrilaterals
+in one operation). The various methods are described below.</p>
+<p>The filter argument defines how to filter pixels from the source
+image. In the current version, it can be <b>NEAREST</b> (use nearest
+neighbour), <b>BILINEAR</b> (linear interpolation in a 2x2
+environment), or <b>BICUBIC</b> (cubic spline interpolation in a 4x4
+environment). If omitted, or if the image has mode "1" or "P", it is
+set to <b>NEAREST</b>.</p>
+<p><b>im.transform(size, EXTENT, data)</b>
+<span>=&gt; image</span></p>
+<p><b>im.transform(size, EXTENT, data, filter)</b>
+<span>=&gt; image</span></p>
+<p>Extracts a subregion from the image.</p>
+<p><i>Data</i> is a 4-tuple (<i>x0, y0, x1, y1</i>) which specifies
+two points in the input image's coordinate system. The resulting
+image will contain data sampled from between these two points, such
+that (<i>x0, y0</i>) in the input image will end up at (0,0) in the
+output image, and (<i>x1, y1</i>) at <i>size</i>.</p>
+<p>This method can be used to crop, stretch, shrink, or mirror an
+arbitrary rectangle in the current image. It is slightly slower than
+<b>crop</b>, but about as fast as a corresponding <b>resize</b>
+operation.</p>
+<p><b>im.transform(size, AFFINE, data)</b>
+<span>=&gt; image</span></p>
+<p><b>im.transform(size, AFFINE, data, filter)</b>
+<span>=&gt; image</span></p>
+<p>Applies an affine transform to the image, and places the result
+in a new image with the given size.</p>
+<p><i>Data</i> is a 6-tuple (<i>a, b, c, d, e, f</i>) which contain
+the first two rows from an affine transform matrix. For each pixel
+(<i>x, y</i>) in the output image, the new value is taken from a
+position (a <i>x</i> + b <i>y</i> + c, d <i>x</i> + e <i>y</i> + f)
+in the input image, rounded to nearest pixel.</p>
+<p>This function can be used to scale, translate, rotate, and shear
+the original image.</p>
+<p><b>im.transform(size, QUAD, data)</b>
+<span>=&gt; image</span></p>
+<p><b>im.transform(size, QUAD, data, filter)</b>
+<span>=&gt; image</span></p>
+<p>Maps a quadrilateral (a region defined by four corners) from the
+image to a rectangle with the given size.</p>
+<p><i>Data</i> is an 8-tuple (<i>x0, y0, x1, y1, x2, y2, y3,
+y3</i>) which contain the upper left, lower left, lower right, and
+upper right corner of the source quadrilateral.</p>
+<p><b>im.transform(size, MESH, data) image</b>
+<span>=&gt; image</span></p>
+<p><b>im.transform(size, MESH, data, filter) image</b>
+<span>=&gt; image</span></p>
+<p>Similar to <b>QUAD</b>, but data is a list of target
+rectangles and corresponding source quadrilaterals.</p>
+</div>
+<h3 id="Image.transpose">transpose</h3>
+<div class="method" id="image-transpose-method">
+<p><b>im.transpose(method)</b>
+<span>=&gt; image</span></p>
+<p>Returns a flipped or rotated copy of an image.</p>
+<p><i>Method</i> can be one of the following: <b>FLIP_LEFT_RIGHT</b>,
+<b>FLIP_TOP_BOTTOM</b>, <b>ROTATE_90</b>, <b>ROTATE_180</b>, or
+<b>ROTATE_270</b>.</p>
+</div>
+<h3 id="Image.verify">verify</h3>
+<div class="method" id="image-verify-method">
+<p><b>im.verify()</b></p>
+<p>Attempts to determine if the file is broken, without actually
+decoding the image data. If this method finds any problems, it
+raises suitable exceptions. This method only works on a newly opened
+image; if the image has already been loaded, the result is undefined.
+Also, if you need to load the image after using this method, you must
+reopen the image file.</p>
+</div>
+<h2 id="attributes">Attributes</h2>
+<p>Instances of the <b>Image</b> class have the following
+attributes:</p>
+<h3 id="Image.format">format</h3>
+<div class="attribute" id="image-format-attribute">
+<p><b>im.format</b>
+<span>=&gt; string or None</span></p>
+<p>The file format of the source file.  For images created by the
+library, this attribute is set to None.</p>
+</div>
+<h3 id="Image.mode">mode</h3>
+<div class="attribute" id="image-mode-attribute">
+<p><b>im.mode</b>
+<span>=&gt; string</span></p>
+<p>Image mode. This is a string specifying the pixel format used by
+the image.  Typical values are "1", "L", "RGB", or "CMYK."</p>
+</div>
+<h3 id="Image.size">size</h3>
+<div class="attribute" id="image-size-attribute">
+<p><b>im.size</b>
+<span>=&gt; (width, height)</span></p>
+<p>Image size, in pixels. The size is given as a 2-tuple (width,
+height).</p>
+</div>
+<h3 id="Image.palette">palette</h3>
+<div class="attribute" id="image-palette-attribute">
+<p><b>im.palette</b>
+<span>=&gt; palette or None</span></p>
+<p>Colour palette table, if any. If mode is "P", this
+should be an instance of the <b>ImagePalette</b> class.  Otherwise, it
+should be set to None.</p>
+</div>
+<h3 id="Image.info">info</h3>
+<div class="attribute" id="image-info-attribute">
+<p><b>im.info</b>
+<span>=&gt; dictionary</span></p>
+<p>A dictionary holding data associated with the image.</p>
+</div><p><a href="http://www.pythonware.com/library/pil/handbook/concepts.htm">Prev</a>&nbsp;&nbsp;&nbsp;<a href="http://www.pythonware.com/library/pil/handbook/imagechops.htm">Next</a></p>
+</div>
+
+</td></tr>
+</tbody></table>
+
+<script src="./The Image Module_files/urchin.js" type="text/javascript"></script>
+<script type="text/javascript">
+_uacct = "UA-578832-2";
+urchinTracker();
+</script>
+
+
+
+</body></html>

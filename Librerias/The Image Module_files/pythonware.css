@@ -1,0 +1,89 @@
+/* style sheet for the 2002 edition of www.pythonware.com */
+
+BODY {
+    font-family: "Georgia", serif;
+    color: black; background: white;
+    margin: 0px 0px 0px 0px;
+    /* background-image: url(images/snow2.gif) */
+}
+
+H1, H2, H3 {
+    font-family: "Verdana", sans-serif;
+    color: #044484; font-weight: bold; font-style: italic;
+}
+
+H1.title {
+    color: #044484; font-weight: bold; font-style: normal;
+}
+
+IMG.title { border: 0px; margin: 5px; padding: 5px; }
+
+.browser {
+    padding-left: 10px;
+    color: #044484; font-size: 8pt;
+}
+
+.browser DT {
+    padding: 5px;
+}
+
+.masthead {
+    font-size: 8pt;
+    background: #add8e6; padding: 5px;
+    border: 0px;
+    border-bottom: 2px solid #044484;
+    margin: 0px 0px 20px 0px;
+}
+
+.news {
+    font-size: 8pt;
+}
+
+.newsdate {
+    font-weight: bold; color: #044484;
+}
+
+.newsitem {
+    font-family: "Georgia", serif;
+}
+
+.search {
+   background: #c0c0c0; padding: 2px;
+}
+
+.pad {
+   padding: 0px 20px;
+}
+
+.news {
+   padding: 5px;
+}
+
+.note {
+   background: #add8e6;
+   padding: 5px;
+}
+
+PRE { margin-left: 20px; color: #044484; }
+
+HR { height: 2px; color: #044484; }
+
+A:link { color: #044484; }
+A:active { color: #044484; }
+A:visited { color: #444444; }
+
+/* make sure title anchors stay the same */
+H1 A:visited { color: #044484; }
+H2 A:visited { color: #044484; }
+H3 A:visited { color: #044484; }
+
+/* assorted style classes */
+.timestamp { color: #044484; }
+.bluebox { background: #add8e6; } /* light blue */
+.compact { margin: 0; }
+.mark { color: #044484; }
+.small { font-size: xx-small; }
+.highlight { background: #add8e6; }
+.mark { color: #044484; }
+.grid { background: #044484; }
+.hidden { background: white; color: white; }
